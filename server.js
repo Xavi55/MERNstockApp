@@ -21,9 +21,13 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname,'view/build')));
 
 /////////////    ROUTES    //////////////////
-app.get('/login',async (req,res) =>
+app.post('/login',async (req,res) =>
 {
-    res.json('/login');
+    let x = await User.find({"username":req.body.username,"password":req.body.password});
+    if(Object.keys(x).length!=0)
+        res.json({'pass':1});
+    else
+        res.json({'pass':0});
 });
 
 app.post('/signup',async (req,res)=>

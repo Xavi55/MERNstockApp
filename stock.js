@@ -67,10 +67,11 @@ class stock
         return this.stock+this.historical
     }
 }
-//
+/*
 x= new stock('AAPL');
 x.getHistory().then(data=>
     {
         console.log(data[0],data[251]);
     });
+*/
 module.exports = stock;
