@@ -64,14 +64,37 @@ class stock
     }
     fun()
     {
-        return this.stock+this.historical
+        /* //return this.stock+this.historical
+        var options = 
+        { 
+            method: 'POST',
+            url: 'https://www.nasdaq.com/symbol/ge/historical',
+            headers: 
+            { 'postman-token': '83993654-a2f6-b811-2bad-7e56ac6b6865',
+                'cache-control': 'no-cache',
+                'content-type': 'text/plain' },
+            body:'5d|false|ge',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
+            json:false,
+            timeout:2500,
+            debug:true
+        };
+
+
+         request(options)
+        .then(res => 
+            console.log(res)
+        )
+        .catch(err => 
+            console.log(err)
+        ); */
     }
 }
-/*
-x= new stock('AAPL');
-x.getHistory().then(data=>
+//var x= new stock('AAPL');
+//x.fun();
+/* x.getHistory().then(data=>
     {
         console.log(data[0],data[251]);
     });
-*/
+ */
 module.exports = stock;

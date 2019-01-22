@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { Button, FormControl, Input,InputLabel, Paper  } from '@material-ui/core'
+import React from 'react';
+import { Button, FormControl, Input,InputLabel, Paper,  Snackbar  } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
+
 import './login.css';
 
 const styles = theme => ({
@@ -22,7 +23,7 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-  },
+  }
 });
 
 class Login extends React.Component {
@@ -33,13 +34,30 @@ class Login extends React.Component {
     this.state={
       username:'',
       password:'',
+      empty:false,
+      okay:false,
+      fail:false
     };
     this.login = this.login.bind(this);
+    //this.isEmpty = this.isEmpty.bind(this);
     //this.handleChange = this.handleChange.bind(this);
   }
+
+  isEmpty()
+  {
+    if(this.state.username.length===0 && this.state.password.length===0)
+      return true;
+  }
+
   login()
   {
-    const options={
+    if(this.isEmpty())
+    {
+      this.setState({fail:true});
+    }
+    else
+    {
+      const options={
       method:'POST',
       body:JSON.stringify({'username':this.state.username,'password':this.state.password}),
       headers:{
@@ -52,10 +70,29 @@ class Login extends React.Component {
     .then(res=>res.json())//preProcess?
     .then(data => 
       {
-          //this.setState({todos:data.data});
-          console.log(data);
+        switch(data.pass)
+        {
+          case 0:
+            this.setState({fail:true});
+            break
+          case 1:
+            this.setState({okay:true});
+            console.log(data);
+            setTimeout(()=>
+            {
+              this.props.history.push('/home',{state:data.session}); //send to home page
+            },2500);
+          break;
+            case 2:
+            console.log(data);
+            break;
+          default:
+          console.log("def");
+        }
       })
-      .catch(err => console.log('Error found:',err));
+      .catch(err => console.log('Error found:',err)); 
+     }
+    this.setState({username:"",password:""});
   }
 
   handleChange(elem,value)
@@ -67,6 +104,7 @@ class Login extends React.Component {
         break;
       case "password":
         this.setState({password:value})
+        break;
     }
   }
   render() {
@@ -81,13 +119,13 @@ class Login extends React.Component {
             <FormControl>
               <InputLabel htmlFor='user'>Username
               </InputLabel>
-              <Input name='user' onChange={(e)=>this.handleChange("username",e.target.value)} autoFocus/>
+              <Input name='user' onChange={(e)=>this.handleChange("username",e.target.value)} value={this.state.username} autoFocus/>
             </FormControl>
             <br/>
             <FormControl>
               <InputLabel htmlFor='pass'>Password
               </InputLabel>
-              <Input name='pass'onChange={(e)=>this.handleChange("password",e.target.value)} />
+              <Input name='pass'onChange={(e)=>this.handleChange("password",e.target.value)} value={this.state.password} />
             </FormControl>
           </form>
           <br/>
@@ -98,6 +136,31 @@ class Login extends React.Component {
             </Button>
           </div>
         </Paper>
+        <Snackbar
+          anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+          open={this.state.okay}
+          autoHideDuration={3000}
+          onClose={()=>this.setState({okay:false})}
+          message={'Sign Up Success!'}
+        >
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+          open={this.state.empty}
+          autoHideDuration={3000}
+          onClose={()=>this.setState({empty:false})}
+          message={'All information is required!'}
+        >
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{vertical:'bottom',horizontal:'left'}}
+          open={this.state.fail}
+          autoHideDuration={3000}
+          onClose={()=>this.setState({fail:false})}
+          message={'Wrong login info!'}
+        >
+        </Snackbar>
+           
       </div>
     );
   }
