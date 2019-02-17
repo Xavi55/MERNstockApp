@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Login from "./Login/Login";
 import Home from "./Home/Home";
+//import AuthenticatedRoute from './AuthenticatedRoute'; //didn't need it
 class Routes extends React.Component
 {
   constructor(props)
@@ -9,37 +10,7 @@ class Routes extends React.Component
     super(props);
     this.state=
     {
-      isAuth:0,
-      session:{}
     }
-    this.loginCheck = this.loginCheck.bind(this);
-  }
-
-  loginCheck()
-  {
-    if(this.state.isAuth)
-    {
-      return(
-        <div>
-          <Route path="/home" exact component={Home}/>
-          <Redirect to={{pathname:'/home', state:this.state.session}}/>
-        </div>
-      )
-    }
-  }
-
-  componentDidMount()
-  {
-    fetch('/isSecure')
-    .then(res => res.json())
-    .then(res=>
-    {
-      if(res.logged)
-      {
-        this.setState({isAuth:1,session:res.session});
-        console.log(res.session);
-      }
-    });
   }
   render()
   {
@@ -53,17 +24,15 @@ class Routes extends React.Component
         :
         null
        */}
-       {
-         //this.loginCheck()
-       }
       <Route path="/" exact component={Login} />
-      {<Route path="/home" exact component={Home} />
-      }
+      <Route path="/home" exact component={Home}/>
+      <Route component={()=>{return(<h1 style={{textAlign:'center'}}><br/><br/>404</h1>)}}/>
     </Switch>
     )
   }
 }
 export default Routes;
+//<AuthenticatedRoute isAuth={this.state.isAuth} session={this.state.session} path="/home" component={Home}/>
 
 /* export default () =>
   <Switch>

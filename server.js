@@ -36,21 +36,21 @@ app.post('/login',async (req,res) =>
     }
     else
     {
-    let x = await User.find({"username":req.body.username,"password":req.body.password});
-    if(Object.keys(x).length!=0)
-    {
-        req.session.name=x[0].username;
-        req.session.userID=x[0].id
-        //res.json({'pass':1,'username':x[0].username,'userID':x[0].id});
-        res.json({'pass':1,'session':req.session})
-        //make a session, send it back!
-    }
-    else
-        res.json({'pass':0});
+        let x = await User.find({"username":req.body.username,"password":req.body.password});
+        if(Object.keys(x).length!=0)
+        {
+            req.session.name=x[0].username;
+            req.session.userID=x[0].id
+            //res.json({'pass':1,'username':x[0].username,'userID':x[0].id});
+            res.json({'pass':1,'session':req.session})
+            //make a session, send it back!
+        }
+        else
+            res.json({'pass':0});
     }
 });
 
-app.get('/isSecure',async (req,res)=>
+app.get('/isSecure',(req,res)=>
 {
     if(req.session.name)
     {

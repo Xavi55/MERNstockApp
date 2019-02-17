@@ -53,7 +53,7 @@ class Login extends React.Component {
   {
     if(this.isEmpty())
     {
-      this.setState({fail:true});
+      this.setState({empty:true});
     }
     else
     {
@@ -80,14 +80,14 @@ class Login extends React.Component {
             console.log(data);
             setTimeout(()=>
             {
-              this.props.history.push('/home',{state:data.session}); //send to home page
+              this.props.history.push('/home'/*,{state:data.session}*/); //send to home page
             },2500);
           break;
             case 2:
             console.log(data);
             break;
           default:
-          console.log("def");
+          console.log("default");
         }
       })
       .catch(err => console.log('Error found:',err)); 
@@ -107,6 +107,19 @@ class Login extends React.Component {
         break;
     }
   }
+
+  componentWillMount()//login check
+  {
+    fetch('isSecure')
+    .then(res=>res.json())
+    .then(res=>{
+      if(res.logged)
+      {
+        this.props.history.push('/home');
+      }
+    })
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -141,7 +154,7 @@ class Login extends React.Component {
           open={this.state.okay}
           autoHideDuration={3000}
           onClose={()=>this.setState({okay:false})}
-          message={'Sign Up Success!'}
+          message={'Log in Success!'}
         >
         </Snackbar>
         <Snackbar
